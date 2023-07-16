@@ -65,7 +65,7 @@ const createPost = () => {
   return {
     id: currentPostNumber,
     url: (`photos/${currentPostNumber}.jpg`),
-    Description: generateDescription(),
+    description: generateDescription(),
     likes: getRandomInteger(15, 200),
     comments: Array.from({length:getRandomInteger(0, 6)}, generateRandomComment)
   };
