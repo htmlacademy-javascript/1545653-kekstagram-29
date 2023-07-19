@@ -1,4 +1,4 @@
 import {allPosts} from './data.js';
-import { renderGallery } from './drawPictures.js';
+import { renderImages } from './gallery.js';
 
-
+renderImages(allPosts);
