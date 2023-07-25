@@ -1,4 +1,6 @@
+import { resetScale, addListenersToScaleButton, removeListenersToScaleButton } from './scale.js';
 
+import { setDefaultSlider, resetSlider, addListenersToEffectList,removeListenersToEffectList } from './effect.js';
 
 const bodyElement = document.querySelector('body');
 const formElement = document.querySelector('.img-upload__form');
@@ -46,15 +48,21 @@ const onFormSubmit = (evt) => {
 const showModal = () => {
   uploadOverlay.classList.remove('hidden');
   bodyElement.classList.add('modal-open');
+  addListenersToScaleButton();
+  addListenersToEffectList();
 };
 
 const hideModalForm = () => {
   formElement.reset();
   pristine.reset();
+  resetScale();
+  resetSlider();
   uploadOverlay.classList.add('hidden');
   bodyElement.classList.remove('modal-open');
   uploadModalCancel.removeEventListener('click', hideModalForm);
   document.removeEventListener('keydown', onDocumentKeydown);
+  removeListenersToScaleButton();
+  removeListenersToEffectList();
 };
 
 const onClickCloseButton = () => {
@@ -85,7 +93,7 @@ const onfileUploadChange = () => {
 };
 const renderModalForm = () => {
   uploadFile.addEventListener('change', onfileUploadChange);
-
+  setDefaultSlider();
 };
 
 formElement.addEventListener('submit', onFormSubmit);
