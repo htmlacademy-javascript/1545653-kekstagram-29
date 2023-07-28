@@ -2,6 +2,9 @@ import { resetScale, addListenersToScaleButton, removeListenersToScaleButton } f
 
 import { setDefaultSlider, resetSlider, addListenersToEffectList,removeListenersToEffectList } from './effect.js';
 
+import {sendData} from './api.js';
+import {createSuccessMessage} from './message.js';
+
 const bodyElement = document.querySelector('body');
 const formElement = document.querySelector('.img-upload__form');
 const uploadFile = bodyElement.querySelector('#upload-file');
@@ -9,6 +12,12 @@ const uploadOverlay = bodyElement.querySelector('.img-upload__overlay');
 const uploadModalCancel = bodyElement.querySelector('.img-upload__cancel');
 const hashtagsField = formElement.querySelector('.text__hashtags');
 const textField = formElement.querySelector('.text__description');
+const buttonUploadImgSubmit = document.querySelector('.img-upload__submit');
+
+const SubmitButtonText = {
+  IDLE: 'Опубликовать',
+  SENDING: 'Сохраняю...'
+};
 
 const HASHTAGS_COUNT_MAX = 5;
 const SYMBOLS_VALID = /^#[a-za-яё0-9]{1,19}$/i;
@@ -39,11 +48,31 @@ pristine.addValidator(hashtagsField, hasValidCount, ErrorMessages.INVALID_COUNT,
 pristine.addValidator(hashtagsField, hasValidTags, ErrorMessages.INVALID_PATTERN, 2, true);
 pristine.addValidator(hashtagsField, hasUniqueTags, ErrorMessages.NOT_UNIQUE, 1, true);
 
-const onFormSubmit = (evt) => {
-  if (!pristine.validate()) {
-    evt.preventDefault();
-  }
+const blockSubmitButton = () => {
+  buttonUploadImgSubmit.disabled = true;
 };
+
+const unblockSubmitButton = () => {
+  buttonUploadImgSubmit.disabled = false;
+};
+
+formElement.addEventListener('change', () => {
+  const isValid = pristine.validate();
+  if (!isValid) {
+    blockSubmitButton();
+  } else {
+    unblockSubmitButton();
+  }
+});
+
+// const onFormSubmit = (evt) => {
+//   if (!pristine.validate()) {
+//     evt.preventDefault();
+//     blockSubmitButton();
+//   } else {
+//     unblockSubmitButton();
+//   }
+// };
 
 const showModal = () => {
   uploadOverlay.classList.remove('hidden');
@@ -96,6 +125,38 @@ const renderModalForm = () => {
   setDefaultSlider();
 };
 
-formElement.addEventListener('submit', onFormSubmit);
+// formElement.addEventListener('submit', onFormSubmit);
 
-export { renderModalForm };
+// export { renderModalForm };
+
+const startSendData = () => {
+  unblockSubmitButton();
+  buttonUploadImgSubmit.textContent = SubmitButtonText.SENDING;
+  hashtagsField.readOnly = true;
+  textField.readOnly = true;
+};
+
+const EndSendData = () => {
+  unblockSubmitButton();
+  buttonUploadImgSubmit.textContent = SubmitButtonText.IDLE;
+  hashtagsField.readOnly = false;
+  textField.readOnly = false;
+};
+
+const setUserFormSubmit = () => {
+  formElement.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+    const isValid = pristine.validate();
+    if (isValid) {
+      const formData = new FormData(evt.target);
+      startSendData();
+      sendData(formData,()=>(hideModalForm(),createSuccessMessage()))
+        .catch(
+          () => (createSuccessMessage(false))
+        )
+        .finally(EndSendData);
+    }
+  });
+};
+
+export {renderModalForm, setUserFormSubmit};
