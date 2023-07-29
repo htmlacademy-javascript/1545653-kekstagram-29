@@ -63,22 +63,21 @@ const renderComments = (comments) => {
 };
 
 const hideBigPicture = () => {
-bigPictureElement.classList.add('hidden');
-bodyElement.classList.remove('.modal-open');
-document.removeEventListener('keydown', onDocumentKeydown);
+  bigPictureElement.classList.add('hidden');
+  bodyElement.classList.remove('.modal-open');
+  document.removeEventListener('keydown', onDocumentKeydown);
 };
 
 function onDocumentKeydown(evt) {
   if (evt.key === 'Escape') {
-evt.preventDefault();
-hideBigPicture();
+    evt.preventDefault();
+    hideBigPicture();
   }
 }
 
 const onCancelButtonClick = () => {
   hideBigPicture();
-}
-
+};
 const renderPictureDetails = ({url, likes, description}) => {
   bigPictureElement.querySelector('.big-picture__img img').src = url;
   bigPictureElement.querySelector('.big-picture__img img').alt = description;
