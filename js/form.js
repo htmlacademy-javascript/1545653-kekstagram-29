@@ -13,6 +13,7 @@ const uploadModalCancel = bodyElement.querySelector('.img-upload__cancel');
 const hashtagsField = formElement.querySelector('.text__hashtags');
 const textField = formElement.querySelector('.text__description');
 const buttonUploadImgSubmit = document.querySelector('.img-upload__submit');
+const FILE_TYPES = ['jpg', 'jpeg', 'png'];
 
 const SubmitButtonText = {
   IDLE: 'Опубликовать',
@@ -159,4 +160,22 @@ const setUserFormSubmit = () => {
   });
 };
 
-export {renderModalForm, setUserFormSubmit};
+const fileChooser = document.querySelector('.img-upload__input[type=file]');
+const preview = document.querySelector('.img-upload__preview img');
+const previewEffects = document.querySelectorAll('.effects__preview');
+
+const addFileChooserListener = () => {
+  fileChooser.addEventListener('change', () => {
+    const file = fileChooser.files[0];
+    const fileName = file.name.toLowerCase();
+
+    const matches = FILE_TYPES.some((it) => fileName.endsWith(it));
+
+    if (matches) {
+      preview.src = URL.createObjectURL(file);
+      previewEffects.forEach((value) => (value.style.backgroundImage = `url(${URL.createObjectURL(file)})`));
+    }
+  });
+};
+
+export {renderModalForm, setUserFormSubmit, addFileChooserListener};
