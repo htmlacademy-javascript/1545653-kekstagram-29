@@ -130,7 +130,7 @@ const renderModalForm = () => {
 // export { renderModalForm };
 
 const startSendData = () => {
-  unblockSubmitButton();
+  blockSubmitButton();
   buttonUploadImgSubmit.textContent = SubmitButtonText.SENDING;
   hashtagsField.readOnly = true;
   textField.readOnly = true;
