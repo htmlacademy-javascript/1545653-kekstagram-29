@@ -1,13 +1,7 @@
-// import {allPosts} from './data.js';
 import { renderImages } from './gallery.js';
-
-// renderImages(allPosts);
-
 import {renderModalForm} from './form.js';
-// renderModalForm();
-
 import {getData} from './api.js';
-import {setUserFormSubmit} from './form.js';
+import {setUserFormSubmit, addFileChooserListener} from './form.js';
 import {showAlert} from './util.js';
 import {showFilters} from './sort.js';
 
@@ -24,3 +18,5 @@ getData().then((picturesArray)=>{
   );
 
 setUserFormSubmit();
+addFileChooserListener();
+
